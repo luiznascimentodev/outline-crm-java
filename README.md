@@ -21,17 +21,13 @@ Arquiteturalmente, o foco foi manter a inteligência da aplicação no serviço,
 
 O projeto está em evolução e segue a proposta original. Neste momento, a base do CRM já está estruturada, com console interativo e persistência no banco. As próximas etapas estão relacionadas ao fechamento de venda e à importação de leads automatizados, conforme descrito na proposta.
 
-## Método STAR
+## Como eu apresentei este projeto
 
-### S - Situação
-
-Eu queria transformar uma proposta de CRM em uma aplicação real, saindo da teoria e colocando em prática conceitos de modelagem, persistência e organização de código.
-
-### T - Tarefa
+Eu quis transformar uma proposta de CRM em uma aplicação real, saindo da teoria e colocando em prática conceitos de modelagem, persistência e organização de código.
 
 Meu objetivo foi criar uma aplicação Java com banco de dados, validações de negócio e uma estrutura que fosse fácil de entender, testar e evoluir.
 
-### A - Ação
+Para chegar nisso, eu:
 
 - Modelei a entidade `Lead` com status e valor de negócio.
 - Separei responsabilidades entre interface de console, serviço e DAO.
@@ -39,9 +35,7 @@ Meu objetivo foi criar uma aplicação Java com banco de dados, validações de 
 - Adicionei validações básicas no serviço, como regra de telefone com 11 dígitos.
 - Comecei a preparar o projeto para evoluir com importação via JSON e automações.
 
-### R - Resultado
-
-Como resultado, construí uma base funcional de CRM em Java com persistência em PostgreSQL e uma arquitetura mais limpa do que um script monolítico. O principal ganho foi o aprendizado prático de separação de camadas, validação de regras de negócio e integração com banco de dados.
+O resultado foi uma base funcional de CRM em Java com persistência em PostgreSQL e uma arquitetura mais limpa do que um script monolítico. O principal ganho foi o aprendizado prático de separação de camadas, validação de regras de negócio e integração com banco de dados.
 
 ## O que aprendi
 

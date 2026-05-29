@@ -1,0 +1,17 @@
+
+As Regras de Negócio (LeadService):
+O seu LeadDao só sabe fazer INSERT, SELECT e UPDATE. Toda a inteligência mora no seu LeadService.
+
+
+
+
+
+Fechamento de Venda (State Machine): A View terá a opção "Close Deal". Ela envia o ID do lead e o valor da venda. O Service busca o lead no banco. Regra: se o valor da venda for zero ou negativo, o Service joga uma Exception ("A won deal must have a value > 0"). Se for válido, o Service manda o DAO atualizar o status para "WON" e salvar o dealValue.
+
+
+A Prova de Fogo (Gson + Automação de WhatsApp):
+A opção "Import from Bot" na sua View vai simular o recebimento de um dado de uma ferramenta ativa de automação de vendas.
+Você terá a seguinte String JSON hardcoded na View:
+{"clientName":"Empresa x","phoneNumber":"41999998888","dealValue":5000.0}
+
+A Regra de Importação: O Gson vai converter o JSON em um objeto Lead. O Service vai identificar que esse lead veio do bot (pois já possui um dealValue preenchido) e vai mandá-lo para o banco de dados com o status = "CONTACTED" (pulando a fase "NEW").

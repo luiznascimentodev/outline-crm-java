@@ -51,4 +51,38 @@ public class LeadService {
 
 
     }
+
+    public boolean closeDeal(int id, double deal) {
+
+        
+      Lead lead = findLeadById(id);
+
+       if (lead == null) {
+        throw new IllegalArgumentException("Cliente nao existe !");
+
+       }
+
+       if (deal <= 0) {
+        throw new IllegalArgumentException("A won deal must have a value > 0");
+       }
+
+       return leadDAO.closeDeal(deal, id);
+
+
+    }
+
+    public boolean importLead(Lead lead){
+
+      double dealValue = lead.getDealValue();
+
+      
+      if (dealValue > 0) {
+        lead.setStatus("CONTACTED");
+      } else {  lead.setStatus("NEW");}
+
+
+      return leadDAO.createLead(lead);
+
+
+    } 
 }

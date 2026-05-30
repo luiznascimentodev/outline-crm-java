@@ -12,7 +12,7 @@ import com.crm.model.Lead;
 public class LeadDAO {
 
 
-    public void createLead(Lead lead) {
+    public boolean createLead(Lead lead) {
 
         String name = lead.getClientName();
         String phone = lead.getPhoneNumber();
@@ -31,22 +31,21 @@ public class LeadDAO {
             stmt.setString(3, status);
             stmt.setDouble(4, deal);
 
-            int response = stmt.executeUpdate();
-
-            if (response == 0) {
-                throw new RuntimeException(
-                        "Erro interno: O banco de dados não inseriu o registro.");
-            }
+            return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
 
             System.out.println("Erro de conexão com o banco de dados ! ");
+
+            return false;
 
         }
 
 
 
     }
+
+    
 
     public List<Lead> listLeads() {
 
@@ -166,6 +165,28 @@ public class LeadDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao atualizar o banco: " + e.getMessage());
             return false;
+        }
+    }
+
+    public boolean closeDeal(double deal, int id) {
+        String queryCloseDeal = "UPDATE leads SET deal_value = ?, status = ? WHERE id = ?";
+        try (Connection database = DatabaseConnection.getConnection();
+                PreparedStatement stmt = database.prepareStatement(queryCloseDeal)) {
+
+
+            stmt.setDouble(1, deal);
+            stmt.setString(2, "WON");
+            stmt.setInt(3, id);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar o banco: " + e.getMessage());
+
+            return false;
+
+
         }
     }
 }

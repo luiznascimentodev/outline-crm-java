@@ -1,12 +1,21 @@
 # CRM de Leads em Java
 
-Projeto em andamento, desenvolvido a partir da proposta descrita em [proposta.txt](proposta.txt). A ideia é construir um CRM simples para gestão de leads com console, persistência em PostgreSQL e uma separação clara entre visão, regra de negócio e acesso a dados.
+Projeto de estudo com foco em evolução incremental de arquitetura e regras de negócio. A aplicação roda em console, persiste dados em PostgreSQL e foi construída para demonstrar crescimento técnico em camadas: de CRUD básico até fluxos de negócio mais completos.
 
-## Visão geral
+## Resumo para recrutadores
 
-Este projeto nasceu como um exercício prático para consolidar fundamentos de Java com foco em arquitetura simples e organizada. A aplicação trabalha com cadastro, consulta, atualização e arquivamento de leads, usando uma estrutura baseada em `View`, `Service`, `DAO` e `Model`.
+Este projeto mostra minha forma de trabalhar: entregar valor em ciclos curtos, aumentar complexidade de forma controlada e manter organização do código conforme o sistema cresce.
 
-## Stack e decisões técnicas
+O que já está implementado:
+
+- Cadastro de leads com validação de telefone.
+- Listagem de leads persistidos no banco.
+- Busca por ID e atualização de cadastro com manutenção de valores anteriores.
+- Arquivamento de lead (status LOST e contrato zerado).
+- Fechamento de venda com validação de existência do lead e valor positivo.
+- Importação de lead via JSON usando Gson, com regra automática de status.
+
+## Stack
 
 - Java
 - Maven
@@ -15,49 +24,75 @@ Este projeto nasceu como um exercício prático para consolidar fundamentos de J
 - Gson
 - dotenv
 
-Arquiteturalmente, o foco foi manter a inteligência da aplicação no serviço, deixando o DAO responsável apenas pela comunicação com o banco. Isso ajuda a reduzir acoplamento e facilita evolução futura.
+## Arquitetura aplicada
 
-## Status do projeto
+O projeto está organizado em camadas com responsabilidades separadas:
 
-O projeto está em evolução e segue a proposta original. Neste momento, a base do CRM já está estruturada, com console interativo e persistência no banco. As próximas etapas estão relacionadas ao fechamento de venda e à importação de leads automatizados, conforme descrito na proposta.
+- View: interação de menu e entrada de dados no console.
+- Service: regras de negócio e validações.
+- DAO: acesso e atualização dos dados no PostgreSQL.
+- Model: representação da entidade de domínio (Lead).
+- Infra: conexão com o banco centralizada.
 
-## Como eu apresentei este projeto
+Essa separação reduz acoplamento e facilita evolução, manutenção e testes.
 
-Eu quis transformar uma proposta de CRM em uma aplicação real, saindo da teoria e colocando em prática conceitos de modelagem, persistência e organização de código.
+## Evolução de complexidade (o que implementei em etapas)
 
-Meu objetivo foi criar uma aplicação Java com banco de dados, validações de negócio e uma estrutura que fosse fácil de entender, testar e evoluir.
+1. Estrutura base
+- Organização de projeto Java com Maven e separação por camadas.
+- Conexão com banco e persistência inicial.
 
-Para chegar nisso, eu:
+2. Operações de CRM
+- Criação, listagem, busca e atualização de leads.
+- Consolidação de operações CRUD em fluxo de console.
 
-- Modelei a entidade `Lead` com status e valor de negócio.
-- Separei responsabilidades entre interface de console, serviço e DAO.
-- Estruturei a conexão com PostgreSQL de forma centralizada.
-- Adicionei validações básicas no serviço, como regra de telefone com 11 dígitos.
-- Comecei a preparar o projeto para evoluir com importação via JSON e automações.
+3. Regras de negócio
+- Validação de telefone com 11 dígitos no serviço.
+- Tratamento de casos inválidos com mensagens de erro.
 
-O resultado foi uma base funcional de CRM em Java com persistência em PostgreSQL e uma arquitetura mais limpa do que um script monolítico. O principal ganho foi o aprendizado prático de separação de camadas, validação de regras de negócio e integração com banco de dados.
+4. Estados de funil comercial
+- Arquivamento com transição explícita para LOST.
+- Fechamento de venda com transição para WON e valor de contrato.
+
+5. Entrada de dados estruturada
+- Importação de lead em JSON com desserialização via Gson.
+- Definição automática de status (NEW ou CONTACTED) conforme valor de negócio.
 
 ## O que aprendi
 
-- A importância de separar regra de negócio do acesso a dados.
-- Como organizar uma aplicação Java em camadas simples e legíveis.
-- Como usar JDBC de forma mais consciente e previsível.
-- Como pensar uma evolução de produto a partir de uma proposta inicial.
-- Como documentar um projeto de forma mais interessante para recrutadores.
+- Como transformar regras de negócio em métodos de serviço claros e reutilizáveis.
+- Como modelar transições de status de forma consistente com o funil comercial.
+- Como manter o DAO focado em persistência, sem vazar regra de negócio para SQL.
+- Como evoluir um projeto simples para cenários mais realistas sem perder legibilidade.
+- Como documentar entregas com foco em impacto técnico e comunicação para recrutadores.
+
+## Estado atual
+
+O CRM já cobre um fluxo funcional relevante para operação comercial básica: captura, manutenção, qualificação, encerramento de oportunidade e importação de dados.
 
 ## Próximos passos
 
-- Finalizar o fluxo de fechamento de venda.
-- Concluir a importação de leads via JSON.
-- Melhorar as mensagens e a experiência do console.
-- Adicionar testes para regras principais do serviço.
+- Melhorar tratamento de erros de entrada no console (parse seguro e UX).
+- Adicionar testes automatizados para as regras do serviço.
+- Evoluir importação JSON para arquivo externo/lote.
+- Padronizar mensagens e internacionalização das validações.
 
-## Como rodar
+## Como executar
 
-1. Suba o PostgreSQL com o `docker-compose.yml`.
-2. Copie o arquivo [.env.example](.env.example) para `.env` e ajuste as credenciais, se necessário.
-3. Execute a aplicação pela classe principal `com.crm.Main`.
+1. Suba o banco com `docker compose up -d`.
+2. Configure as variáveis de ambiente no arquivo `.env`.
+3. Compile e rode com Maven:
 
-## Observação
+```bash
+mvn clean compile
+mvn exec:java -Dexec.mainClass="com.crm.Main"
+```
 
-Este repositório está sendo usado como vitrine de aprendizado. O código e a documentação estão sendo evoluídos de acordo com a proposta original e com foco em demonstrar raciocínio técnico, organização e capacidade de entrega incremental.
+## Objetivo do repositório
+
+Este repositório é uma vitrine de aprendizado prático em Java back-end, com foco em:
+
+- progressão técnica incremental,
+- organização de código,
+- decisões arquiteturais simples e bem justificadas,
+- entrega contínua de funcionalidades.

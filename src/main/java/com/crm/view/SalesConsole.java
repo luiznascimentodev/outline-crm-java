@@ -3,6 +3,7 @@ package com.crm.view;
 import java.util.Scanner;
 import com.crm.model.Lead;
 import com.crm.service.LeadService;
+import com.google.gson.Gson;
 
 public class SalesConsole {
 
@@ -24,7 +25,6 @@ public class SalesConsole {
             System.out.println("5. Fechamento de Venda");
             System.out.println("6. Importar");
             System.out.println("7. Sair");
-
 
 
 
@@ -148,14 +148,14 @@ public class SalesConsole {
 
                 case 4:
                     System.out.println("Qual o id do usuário que deseja Arquivar ? ");
-                    int archiveId = Integer.parseInt(scanner.nextLine()); 
+                    int archiveId = Integer.parseInt(scanner.nextLine());
 
-                    Lead clienteEncontrado = leadService.findLeadById(archiveId); 
+                    Lead clienteEncontrado = leadService.findLeadById(archiveId);
                     if (clienteEncontrado == null) {
-                        
+
                         System.out.println("Erro: Nenhum cliente encontrado com este ID.");
                     } else {
-                        
+
                         boolean sucesso = leadService.archiveLead(archiveId);
 
                         if (sucesso) {
@@ -167,8 +167,53 @@ public class SalesConsole {
                     }
                     break;
 
-                    case 5: 
+                case 5:
+                    try {
+                        System.out.println("Qual o id do usuário que deseja fechar a venda? ");
+                        int dealId = Integer.parseInt(scanner.nextLine());
+
+                        System.out.println("Qual Valor da venda? ");
+                        double dealValue = Double.parseDouble(scanner.nextLine());
+
+                        boolean sucesso = leadService.closeDeal(dealId, dealValue);
+
                         
+                        if (sucesso) {
+                            System.out.println("Venda fechada com sucesso!");
+                        } else {
+                            System.out.println(
+                                    "Erro interno: Não foi possível atualizar a base de dados.");
+                        }
+
+                    } catch (IllegalArgumentException e) {
+                        
+                        System.out.println("Falha na operação: " + e.getMessage());
+                    }
+
+                    break;
+
+                case 6:
+
+                     String importBot = "{\"clientName\":\"Empresa Y\",\"phoneNumber\":\"41999998888\",\"dealValue\":5000.0}"; 
+
+                     Gson gson = new Gson();
+
+                     Lead importLead = gson.fromJson(importBot,Lead.class);
+
+                     boolean sucesso = leadService.importLead(importLead);
+                     
+                     if (sucesso) {
+                            System.out.println("Cliente cadastrado com sucesso");
+                        } else {
+                            System.out.println(
+                                    "Erro interno: Não foi possível atualizar a base de dados.");
+                        }
+
+                     
+                     break;
+
+
+
 
 
                 default:
